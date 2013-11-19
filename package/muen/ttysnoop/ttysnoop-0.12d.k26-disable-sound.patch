@@ -1,0 +1,28 @@
+diff -Naur ttysnoop-0.12d.k26.orig/ttysnoops.c ttysnoop-0.12d.k26/ttysnoops.c
+--- ttysnoop-0.12d.k26.orig/ttysnoops.c	2005-07-10 05:03:20.000000000 +0200
++++ ttysnoop-0.12d.k26/ttysnoops.c	2014-02-03 16:50:38.933102924 +0100
+@@ -112,7 +112,6 @@
+ 
+ static void shutup(int signal)
+ {
+-	HWNoSound();
+ 	exit(1);
+ }
+ 
+@@ -506,16 +505,6 @@
+ 	
+ 	StopHandle();
+ 	
+-	if (InitSound()) /* play if we can */
+-	{
+-		DoSound(466, SLEN);	// A#4
+-		DoSound(622, SLEN);	// D#5
+-		DoSound(784, SLEN);	// G5
+-		DoSound(932, SLEN*2);	// A#5
+-		DoSound(784, SLEN);	// G5
+-		DoSound(932, SLEN*3);	// A#5
+-	}
+-	
+ 	/* demoniac end */
+ 	
+ 	if (!isatty(STDIN_FILENO))

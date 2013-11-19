@@ -1,0 +1,5 @@
+config BR2_PACKAGE_TTYSNOOP
+	bool "ttysnoop"
+	help
+	  Allows you to spy on telnet+serial connections.
+	  Used to link tty0 with hvc0.

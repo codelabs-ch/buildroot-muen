@@ -2689,6 +2689,7 @@ endmenu
 menu "Muen Separation Kernel"
 source "package/muen/mingetty/Config.in"
 source "package/muen/ttysnoop/Config.in"
+source "package/muen/vttest/Config.in"
 endmenu
 
 endmenu

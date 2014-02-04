@@ -1,0 +1,4 @@
+config BR2_PACKAGE_VTTEST
+	bool "vttest"
+	help
+	  Vttest tests the compatibility of so-called "VT100-compatible" terminals.

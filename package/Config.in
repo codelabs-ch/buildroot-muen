@@ -1917,6 +1917,7 @@ menu "Text editors and viewers"
 endmenu
 
 menu "Muen Separation Kernel"
+source "package/muen/mingetty/Config.in"
 source "package/muen/ttysnoop/Config.in"
 endmenu
 

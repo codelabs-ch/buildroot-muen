@@ -1,1 +1,1 @@
-tty0   /dev/hvc0   login   /bin/sh
+tty0   /dev/hvc0   login   /bin/login

@@ -1,0 +1,6 @@
+config BR2_PACKAGE_MINGETTY
+	bool "mingetty"
+	help
+	  Small Linux console getty that is started on the Linux text console, asks
+	  for a login name and then tranfers over to /bin/login. Is extended to
+	  allow automatic login and starting any app.

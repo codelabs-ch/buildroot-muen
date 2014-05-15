@@ -1,0 +1,40 @@
+#!/bin/bash
+
+OUTPUT=/dev/ttyS0
+
+function print {
+	echo $1 >> $OUTPUT
+}
+
+function header {
+	print ""
+	print "Starting muen-linux stress test"
+	print "`date`"
+	print ""
+}
+
+header
+
+# console output
+ROUNDS=100
+
+cd /
+for i in `seq 1 $ROUNDS`; do
+	print "Console output round $i"
+	find .
+done
+
+# stress
+STRESS="stress -c 8 -m 2 --vm-bytes 64M -t 10s"
+print "Executing $STRESS"
+$STRESS
+
+# netperf
+netserver
+NETPERF="netperf -f M"
+print "Executing $NETPERF"
+$NETPERF
+killall netserver
+
+print "DONE"
+print "`date`"

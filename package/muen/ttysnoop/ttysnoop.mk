@@ -6,7 +6,7 @@
 
 TTYSNOOP_VERSION = 0.12d.k26
 TTYSNOOP_SOURCE = ttysnoop-$(TTYSNOOP_VERSION).tar.gz
-TTYSNOOP_SITE = http://sysd.org/stas/files/active/0
+TTYSNOOP_SITE = http://codelabs-ch.github.io/buildroot-muen
 
 define TTYSNOOP_BUILD_CMDS
 	$(MAKE) -C $(@D) CC="$(TARGET_CC) $(TARGET_CFLAGS)"

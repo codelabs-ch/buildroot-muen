@@ -29,12 +29,5 @@ STRESS="stress -c 8 -m 2 --vm-bytes 64M -t 10s"
 print "Executing $STRESS"
 $STRESS
 
-# netperf
-netserver
-NETPERF="netperf -f M"
-print "Executing $NETPERF"
-$NETPERF
-killall netserver
-
-print "DONE"
+print "stresstest DONE"
 print "`date`"

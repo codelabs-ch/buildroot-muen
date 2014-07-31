@@ -1,0 +1,24 @@
+#!/bin/bash
+
+URL=http://192.168.254.1:10000/file
+OUTPUT=/dev/ttyS0
+SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+. $SCRIPTDIR/func.sh
+
+date_print "*** Starting '$0'"
+
+muenfs-marker /muenfs/virtual_keyboard >$OUTPUT 2>&1
+muenfs-test /muenfs/testchannel_1 >$OUTPUT 2>&1
+muenfs-test /muenfs/testchannel_2 >$OUTPUT 2>&1
+
+ifconfig >$OUTPUT 2>&1
+ethtool eth0 >$OUTPUT 2>&1
+
+stresstest
+
+pingpong >$OUTPUT 2>&1
+
+wget $URL >$OUTPUT 2>&1
+
+date_print "*** '$0' DONE"

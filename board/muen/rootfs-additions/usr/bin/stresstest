@@ -2,18 +2,20 @@
 
 OUTPUT=/dev/ttyS0
 
-function print {
+print()
+{
 	echo $1 >> $OUTPUT
 }
 
-function header {
+date_print()
+{
 	print ""
-	print "Starting muen-linux stress test"
+	print "$1"
 	print "`date`"
 	print ""
 }
 
-header
+date_print "*** Starting '$0'"
 
 # console output
 ROUNDS=100
@@ -29,5 +31,4 @@ STRESS="stress -c 8 -m 2 --vm-bytes 64M -t 10s"
 print "Executing $STRESS"
 $STRESS
 
-print "stresstest DONE"
-print "`date`"
+date_print "*** '$0' DONE"

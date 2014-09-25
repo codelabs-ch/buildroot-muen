@@ -1,19 +1,9 @@
 #!/bin/bash
 
 OUTPUT=/dev/ttyS0
+SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-print()
-{
-	echo $1 >> $OUTPUT
-}
-
-date_print()
-{
-	print ""
-	print "$1"
-	print "`date`"
-	print ""
-}
+. $SCRIPTDIR/func.sh
 
 date_print "*** Starting '$0'"
 

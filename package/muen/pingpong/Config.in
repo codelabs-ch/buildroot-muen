@@ -1,0 +1,4 @@
+config BR2_PACKAGE_PINGPONG
+	bool "pingpong"
+	help
+	  Tool to measure SM emulation round-trips.

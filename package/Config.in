@@ -2691,6 +2691,7 @@ source "package/muen/mingetty/Config.in"
 source "package/muen/ttysnoop/Config.in"
 source "package/muen/vttest/Config.in"
 source "package/muen/pingpong/Config.in"
+source "package/muen/sysbench/Config.in"
 endmenu
 
 endmenu

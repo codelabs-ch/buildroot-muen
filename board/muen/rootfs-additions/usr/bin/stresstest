@@ -16,9 +16,7 @@ for i in `seq 1 $ROUNDS`; do
 	find .
 done
 
-# stress
-STRESS="stress -c 8 -m 2 --vm-bytes 64M -t 10s"
-print "Executing $STRESS"
-$STRESS
+# cpu benchmark
+sysbench --test=cpu --cpu-max-prime=10000 run >$OUTPUT 2>&1
 
 date_print "*** '$0' DONE"

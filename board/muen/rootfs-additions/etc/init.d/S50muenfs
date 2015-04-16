@@ -1,0 +1,23 @@
+#!/bin/sh
+
+MODULE=/lib/modules/extra/muenfs.ko
+
+case "$1" in
+  start)
+	echo "Mounting Muen channel filesystem..."
+	insmod $MODULE && mount -t muenfs muenfs /muenfs
+	;;
+  stop)
+	echo "Unmounting Muen channel filesystem..."
+	umount /muenfs && rmmod muenfs
+	;;
+  restart|reload)
+	"$0" stop
+	"$0" start
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit $?

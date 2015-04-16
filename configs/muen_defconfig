@@ -1,4 +1,5 @@
 BR2_x86_64=y
+BR2_KERNEL_MIRROR="http://codelabs-ch.github.io/buildroot-muen"
 BR2_CCACHE=y
 BR2_KERNEL_HEADERS_VERSION=y
 BR2_DEFAULT_KERNEL_VERSION="3.18-muen"

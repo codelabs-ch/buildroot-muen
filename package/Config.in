@@ -2098,6 +2098,7 @@ source "package/muen/vttest/Config.in"
 source "package/muen/pingpong/Config.in"
 source "package/muen/sysbench/Config.in"
 source "package/muen/lmods/Config.in"
+source "package/muen/muenfs/Config.in"
 endmenu
 
 endmenu

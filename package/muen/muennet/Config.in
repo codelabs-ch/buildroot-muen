@@ -1,0 +1,7 @@
+config BR2_PACKAGE_MUENNET
+	bool "muennet"
+	depends on BR2_PACKAGE_MUEN_LINUX_MODULES
+	help
+	  The muennet Linux kernel module implements a virtual network interface
+	  driver which sends and receives data via shared memory channels provided
+	  by the Muen Separation Kernel.

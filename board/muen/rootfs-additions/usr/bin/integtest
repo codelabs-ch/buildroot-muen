@@ -8,6 +8,9 @@ SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 date_print "*** Starting '$0'"
 
+ping -c 3 192.168.10.4 >$OUTPUT 2>&1
+cat /sys/kernel/debug/muennet/net0/info >$OUTPUT
+
 muenfs-marker /muenfs/virtual_keyboard >$OUTPUT 2>&1
 muenfs-test /muenfs/testchannel_1 >$OUTPUT 2>&1
 muenfs-test /muenfs/testchannel_2 >$OUTPUT 2>&1

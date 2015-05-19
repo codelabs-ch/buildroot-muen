@@ -1,0 +1,47 @@
+#!/bin/sh
+
+MODULE=/lib/modules/extra/muennet.ko
+
+HOSTNAME=`hostname`
+
+case $HOSTNAME in
+	nic_linux)
+		in=4
+		out=3
+		;;
+	storage_linux)
+		in=3
+		out=4
+		;;
+	*)
+		# ignore unknown hosts
+		exit 0
+		;;
+esac
+
+MODULE_ARGS="name=net0 reader_protocol=2 writer_protocol=2"
+MODULE_ARGS="$MODULE_ARGS in=testchannel_$in out=testchannel_$out flags=net_hdr"
+
+case "$1" in
+  start)
+	echo "Starting Muen virtual networking..."
+	mount -t debugfs none /sys/kernel/debug \
+		&& insmod $MODULE $MODULE_ARGS \
+		&& ifconfig net0 up \
+		&& ifconfig net0 192.168.10.$out \
+		&& ip route add 192.168.10.0/24 dev net0
+	;;
+  stop)
+	echo "Stopping Muen virtual networking..."
+	umount /sys/kernel/debug && rmmod muennet
+	;;
+  restart|reload)
+	"$0" stop
+	"$0" start
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit $?

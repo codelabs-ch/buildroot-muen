@@ -12,9 +12,10 @@ LMODS_DEPENDENCIES = linux-headers
 LMODS_KNL_VER = $(call qstrip,$(BR2_DEFAULT_KERNEL_HEADERS))
 LMODS_KNL_SRC = $(TOPDIR)/output/build/linux-headers-$(LMODS_KNL_VER)
 
+LMODS_KNL_CNF_REF   = 3878192
 LMODS_KNL_CNF_PRJ   = http://git.codelabs.ch/?p=muen.git
-LMODS_KNL_CNF_OPTS  = hb=refs/heads/devel;a=blob_plain
-LMODS_KNL_CNF_FILE  = f=components/linux/config/linux64-3.18
+LMODS_KNL_CNF_OPTS  = hb=$(LMODS_KNL_CNF_REF);a=blob_plain
+LMODS_KNL_CNF_FILE  = f=components/linux/config/linux64-4.2
 LMODS_KERNEL_CONFIG = \
 	$(LMODS_KNL_CNF_PRJ);$(LMODS_KNL_CNF_OPTS);$(LMODS_KNL_CNF_FILE)
 

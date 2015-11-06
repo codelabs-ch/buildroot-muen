@@ -1,0 +1,24 @@
+#!/bin/sh
+
+SUPP=wpa_supplicant
+INTERFACE=wlan0
+
+case "$1" in
+  start)
+	echo "Starting $SUPP..."
+	$SUPP -c /etc/wpa_supplicant.conf -s -B -i $INTERFACE
+	;;
+  stop)
+	echo "Stopping $SUPP..."
+	killall $SUPP
+	;;
+  restart|reload)
+	"$0" stop
+	"$0" start
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit $?

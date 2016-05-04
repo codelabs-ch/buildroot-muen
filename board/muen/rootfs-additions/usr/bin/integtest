@@ -1,8 +1,13 @@
 #!/bin/bash
 
-URL=http://192.168.254.1:10000/file
+BASE_URL=http://192.168.254.1:10000
+URL=$BASE_URL/file
+REFDATE_FILE=current_date
+REFDATE_URL=$BASE_URL/$REFDATE_FILE
 OUTPUT=/dev/ttyS0
 SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+DATE=$(date +%Y%m%d)
 
 . $SCRIPTDIR/func.sh
 
@@ -23,5 +28,14 @@ stresstest
 pingpong >$OUTPUT 2>&1
 
 wget $URL >$OUTPUT 2>&1
+
+wget $REFDATE_URL >$OUTPUT 2>&1
+
+REFDATE=$(cat $REFDATE_FILE)
+if [ "$REFDATE" == "$DATE" ]; then
+	echo "Current date/time matches expected value" >$OUTPUT 2>&1
+else
+	echo "Date/time mismatch: ref $REFDATE host $DATE" >$OUTPUT 2>&1
+fi
 
 date_print "*** '$0' DONE"

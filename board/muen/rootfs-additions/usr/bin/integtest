@@ -13,6 +13,8 @@ DATE=$(date +%Y%m%d)
 
 date_print "*** Starting '$0'"
 
+stresstest
+
 ping -c 3 192.168.10.4 >$OUTPUT 2>&1
 cat /sys/kernel/debug/muennet/net0/info >$OUTPUT
 
@@ -22,8 +24,6 @@ muenfs-test /muenfs/testchannel_2 >$OUTPUT 2>&1
 
 ifconfig >$OUTPUT 2>&1
 ethtool eth0 >$OUTPUT 2>&1
-
-stresstest
 
 pingpong >$OUTPUT 2>&1
 

@@ -6,6 +6,7 @@ REFDATE_FILE=current_date
 REFDATE_URL=$BASE_URL/$REFDATE_FILE
 OUTPUT=/dev/ttyS0
 SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PEER=192.168.10.4
 
 DATE=$(date +%Y%m%d)
 
@@ -15,7 +16,7 @@ date_print "*** Starting '$0'"
 
 stresstest
 
-ping -c 3 192.168.10.4 >$OUTPUT 2>&1
+ping -c 3 $PEER >$OUTPUT 2>&1
 cat /sys/kernel/debug/muennet/net0/info >$OUTPUT
 
 muenfs-marker /muenfs/virtual_keyboard >$OUTPUT 2>&1
@@ -26,6 +27,8 @@ ifconfig >$OUTPUT 2>&1
 ethtool eth0 >$OUTPUT 2>&1
 
 pingpong >$OUTPUT 2>&1
+
+iperf -c $PEER -fm >$OUTPUT 2>&1
 
 wget $URL >$OUTPUT 2>&1
 

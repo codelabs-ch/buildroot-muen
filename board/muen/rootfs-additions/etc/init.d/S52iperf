@@ -1,0 +1,23 @@
+#!/bin/sh
+
+case "$1" in
+  start)
+	if [ -z "`pidof iperf`" ]; then
+		echo "Starting iperf..."
+		iperf -s > /var/log/iperf.log 2>&1 &
+	fi
+	;;
+  stop)
+	echo "Stopping iperf..."
+	kill `pidof iperf`
+	;;
+  restart|reload)
+	"$0" stop
+	"$0" start
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit $?

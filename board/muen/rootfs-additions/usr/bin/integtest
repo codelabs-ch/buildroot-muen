@@ -8,7 +8,7 @@ OUTPUT=/dev/ttyS0
 SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PEER=192.168.10.4
 
-DATE=$(date +%Y%m%d)
+DATE=$(date -u +%Y%m%d)
 
 . $SCRIPTDIR/func.sh
 

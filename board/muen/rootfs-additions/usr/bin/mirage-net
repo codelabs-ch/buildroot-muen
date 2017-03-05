@@ -1,0 +1,13 @@
+#!/bin/sh
+
+DEV_NAME=net1
+MODULE=/lib/modules/extra/muennet.ko
+MOD_ARGS="reader_protocol=0x7ade5c549b08e814 writer_protocol=0x7ade5c549b08e814"
+MOD_ARGS="$MOD_ARGS in=unikernel_out out=unikernel_in flags=eth_dev"
+
+mount -t debugfs none /sys/kernel/debug
+
+echo 1 > /proc/sys/net/ipv4/ip_forward
+insmod $MODULE name=$DEV_NAME $MOD_ARGS
+ip link set dev $DEV_NAME up
+ip addr add 10.0.0.1/24 dev $DEV_NAME

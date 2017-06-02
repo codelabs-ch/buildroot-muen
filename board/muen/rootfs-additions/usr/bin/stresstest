@@ -8,7 +8,7 @@ SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 date_print "*** Starting '$0'"
 
 # console output
-ROUNDS=100
+ROUNDS=20
 
 cd /
 for i in `seq 1 $ROUNDS`; do

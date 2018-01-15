@@ -15,7 +15,7 @@ LMODS_KNL_SRC = $(TOPDIR)/output/build/linux-headers-$(LMODS_KNL_VER)
 LMODS_KNL_CNF_REF   = refs/heads/devel
 LMODS_KNL_CNF_PRJ   = https://git.codelabs.ch/?p=muen.git
 LMODS_KNL_CNF_OPTS  = hb=$(LMODS_KNL_CNF_REF);a=blob_plain
-LMODS_KNL_CNF_FILE  = f=components/linux/config/linux64-4.10
+LMODS_KNL_CNF_FILE  = f=components/linux/config/linux64-4.14
 LMODS_KERNEL_CONFIG = \
 	$(LMODS_KNL_CNF_PRJ);$(LMODS_KNL_CNF_OPTS);$(LMODS_KNL_CNF_FILE)
 

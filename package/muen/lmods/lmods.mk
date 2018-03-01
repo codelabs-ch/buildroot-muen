@@ -16,14 +16,13 @@ LMODS_KNL_CNF_REF   = refs/heads/devel
 LMODS_KNL_CNF_PRJ   = https://git.codelabs.ch/?p=muen.git
 LMODS_KNL_CNF_OPTS  = hb=$(LMODS_KNL_CNF_REF);a=blob_plain
 LMODS_KNL_CNF_FILE  = f=components/linux/config/linux64-4.14
-LMODS_KERNEL_CONFIG = \
-	$(LMODS_KNL_CNF_PRJ);$(LMODS_KNL_CNF_OPTS);$(LMODS_KNL_CNF_FILE)
+LMODS_KERNEL_CONFIG = $(HOME)/Work/spark/muen/components/linux/config/linux64-4.14
 
 LMODS_MAKE_OPTS  = DESTDIR=$(TARGET_DIR)
 LMODS_MAKE_OPTS += KERNEL_SOURCE=$(LMODS_KNL_SRC)
 
 define LMODS_BUILD_CMDS
-	wget -c "$(LMODS_KERNEL_CONFIG)" -O "$(LMODS_KNL_SRC)/.config"
+	cp "$(LMODS_KERNEL_CONFIG)" "$(LMODS_KNL_SRC)/.config"
 	$(MAKE) CC="$(TARGET_CC)" -C $(LMODS_KNL_SRC) modules_prepare
 endef
 

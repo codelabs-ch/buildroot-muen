@@ -1,0 +1,29 @@
+From 026ae9ee28e8963ea797fb187b5ee8492e792498 Mon Sep 17 00:00:00 2001
+From: Reto Buerki <reet@codelabs.ch>
+Date: Thu, 8 Feb 2018 18:39:16 +0100
+Subject: [PATCH 1/2] Use
+
+---
+ Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index afbc8cb..2bda775 100644
+--- a/Makefile
++++ b/Makefile
+@@ -18,10 +18,10 @@ FLAGS = -Wall -g -O3 -march=native -std=gnu11 -pthread
+ all: cjag
+ 
+ cjag: cjag.c $(OBJECTS) cjag.h
+-	gcc $(OBJECTS) $(FLAGS) -o $@ $@.c -lm
++	$(CC) $(OBJECTS) $(FLAGS) -o $@ $@.c -lm
+ 
+ %.o: %.c
+-	gcc $(FLAGS) -c $^ -o $@
++	$(CC) $(FLAGS) -c $^ -o $@
+ 	
+ .PHONY: clean
+ clean:
+-- 
+2.11.0
+

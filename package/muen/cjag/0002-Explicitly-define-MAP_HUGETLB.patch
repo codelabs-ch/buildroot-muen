@@ -1,0 +1,25 @@
+From 726f3f07cf8ef7b090ac54fd4114682c2a77ac53 Mon Sep 17 00:00:00 2001
+From: Reto Buerki <reet@codelabs.ch>
+Date: Thu, 8 Feb 2018 18:41:35 +0100
+Subject: [PATCH 2/2] Explicitly define MAP_HUGETLB
+
+---
+ jag/common.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/jag/common.c b/jag/common.c
+index 380f5e5..c163b9d 100644
+--- a/jag/common.c
++++ b/jag/common.c
+@@ -9,6 +9,8 @@
+ #include "../util/timing.h"
+ #include "../util/error.h"
+ 
++#define MAP_HUGETLB  0x40000
++
+ #define MIN(x, y) ((x) < (y) ? (x) : (y))
+ 
+ int jag_init(cjag_config_t* config) {
+-- 
+2.11.0
+

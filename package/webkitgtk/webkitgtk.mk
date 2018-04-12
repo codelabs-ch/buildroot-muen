@@ -24,7 +24,8 @@ WEBKITGTK_CONF_OPTS = \
 	-DENABLE_SPELLCHECK=ON \
 	-DPORT=GTK \
 	-DUSE_LIBNOTIFY=OFF \
-	-DUSE_LIBHYPHEN=OFF
+	-DUSE_LIBHYPHEN=OFF \
+	-DCMAKE_BUILD_TYPE=Release
 
 # ARM needs NEON for JIT
 # i386 & x86_64 don't seem to have any special requirements

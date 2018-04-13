@@ -1,0 +1,27 @@
+config BR2_PACKAGE_IOQUAKE3
+	bool "ioquake3"
+	depends on BR2_PACKAGE_HAS_LIBGL # libglu
+	depends on BR2_PACKAGE_OPENAL_ARCH_SUPPORTS
+	depends on BR2_PACKAGE_XORG7 # SDL2 OpenGL (GLX)
+	depends on BR2_USE_MMU # SDL2 OpenGL (GLX)
+	depends on !BR2_STATIC_LIBS # SDL2
+	select BR2_PACKAGE_JPEG
+	select BR2_PACKAGE_LIBGLU
+	select BR2_PACKAGE_LIBPNG
+	select BR2_PACKAGE_OPENAL
+	select BR2_PACKAGE_SDL2
+	select BR2_PACKAGE_SDL2_OPENGL
+	select BR2_PACKAGE_ZLIB
+	help
+	  ioquake3 is a free software first person shooter engine based on the
+	  Quake 3: Arena and Quake 3: Team Arena source code. The source code is
+	  licensed under the GPL version 2, and was first released under that
+	  license by id software on August 20th, 2005.
+
+comment "ioquake3 needs X11 and a toolchain w/ C++, OpenGL backend, gcc >= 4.7, NPTL, dynamic library"
+	depends on BR2_PACKAGE_OPENAL_ARCH_SUPPORTS
+	depends on BR2_PACKAGE_XORG7
+	depends on BR2_USE_MMU
+	depends on !BR2_INSTALL_LIBSTDCPP || !BR2_PACKAGE_HAS_LIBGL || \
+		!BR2_TOOLCHAIN_GCC_AT_LEAST_4_7 || !BR2_TOOLCHAIN_HAS_THREADS_NPTL || \
+		BR2_STATIC_LIBS

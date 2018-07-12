@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-IOQUAKE3_VERSION       = master
+IOQUAKE3_VERSION       = 809a7765b25a6030dbf42ce7a728c28bfed2e991
 IOQUAKE3_SITE          = https://github.com/ioquake/ioq3.git
 IOQUAKE3_SITE_METHOD   = git
 IOQUAKE3_LICENSE       = GPL-2.0

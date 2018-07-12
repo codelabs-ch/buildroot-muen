@@ -4,8 +4,8 @@
 #
 ################################################################################
 
-MUENFS_VERSION     = master
-MUENFS_SITE        = http://git.codelabs.ch/git/muen/linux/muenfs.git
+MUENFS_VERSION     = 12f31e82a08f105163ef4e2ada286e8466aab344
+MUENFS_SITE        = https://git.codelabs.ch/git/muen/linux/muenfs.git
 MUENFS_SITE_METHOD = git
 
 MUENFS_DEPENDENCIES = lmods

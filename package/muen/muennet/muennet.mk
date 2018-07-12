@@ -4,8 +4,8 @@
 #
 ################################################################################
 
-MUENNET_VERSION     = master
-MUENNET_SITE        = http://git.codelabs.ch/git/muen/linux/muennet.git
+MUENNET_VERSION     = fde7866fe7b0ae75b21ee13cc054988e522157cf
+MUENNET_SITE        = https://git.codelabs.ch/git/muen/linux/muennet.git
 MUENNET_SITE_METHOD = git
 
 MUENNET_DEPENDENCIES = lmods

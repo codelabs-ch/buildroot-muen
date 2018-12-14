@@ -8,6 +8,9 @@ get_integ_status()
 # set console loglevel
 echo 4 > /proc/sys/kernel/printk
 
+# fix root ssh key permission
+chmod 600 /root/.ssh/id_rsa
+
 INTEG=$(get_integ_status "`cat /proc/cmdline`")
 
 if [ "$INTEG" == "on" ]; then

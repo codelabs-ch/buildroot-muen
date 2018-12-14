@@ -2281,6 +2281,7 @@ source "package/muen/sysbench/Config.in"
 source "package/muen/lmods/Config.in"
 source "package/muen/muenfs/Config.in"
 source "package/muen/muennet/Config.in"
+source "package/muen/muenblock/Config.in"
 endmenu
 
 endmenu

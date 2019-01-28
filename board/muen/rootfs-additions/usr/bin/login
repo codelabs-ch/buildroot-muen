@@ -1,27 +1,10 @@
 #!/bin/bash
 
-get_integ_status()
-{
-	echo "$1" | grep -oE 'muen_integ=(on|on_kt)' | cut -d= -f2
-}
-
 # set console loglevel
 echo 4 > /proc/sys/kernel/printk
 
 # fix root ssh key permission
 chmod 600 /root/.ssh/id_rsa
-
-INTEG=$(get_integ_status "`cat /proc/cmdline`")
-
-if [ "$INTEG" == "on" ]; then
-	/usr/bin/integtest
-	halt
-fi
-
-if [ "$INTEG" == "on_kt" ]; then
-	/usr/bin/integtest_kt
-	halt
-fi
 
 # spawn normal login process
 /bin/login "$@"

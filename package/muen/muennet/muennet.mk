@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-MUENNET_VERSION     = fde7866fe7b0ae75b21ee13cc054988e522157cf
+MUENNET_VERSION     = f99d4d0c01e2ed859fd549f33608998acb279f86
 MUENNET_SITE        = https://git.codelabs.ch/git/muen/linux/muennet.git
 MUENNET_SITE_METHOD = git
 

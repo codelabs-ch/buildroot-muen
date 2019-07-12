@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-MUENBLOCK_VERSION     = 9ec79ea46218c545fefb4e42fad60777d11d8f15
+MUENBLOCK_VERSION     = ca65203cb27bfe0de75b27fb660d816b6dc7e2c3
 MUENBLOCK_SITE        = https://git.codelabs.ch/git/muen/linux/muenblock
 MUENBLOCK_SITE_METHOD = git
 

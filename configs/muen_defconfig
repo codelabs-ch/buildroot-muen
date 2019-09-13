@@ -1,5 +1,5 @@
 BR2_x86_64=y
-BR2_KERNEL_MIRROR="http://codelabs-ch.github.io/buildroot-muen"
+BR2_KERNEL_MIRROR="https://www.codelabs.ch/download"
 BR2_CCACHE=y
 BR2_STRIP_EXCLUDE_DIRS="lib/modules"
 BR2_KERNEL_HEADERS_VERSION=y

@@ -1,9 +1,25 @@
 #!/bin/sh
 
-DEV_NAME=net1
+CHAN_NAME=$1
+DELIM="|"
+if [ -z "$CHAN_NAME" ]
+then
+	CHAN_NAME="unikernel"
+	DELIM="_"
+fi
+
+IN="$CHAN_NAME${DELIM}out"
+OUT="$CHAN_NAME${DELIM}in"
+
+DEV_NAME=$2
+if [ -z "$DEV_NAME" ]
+then
+	DEV_NAME="net1"
+fi
+
 MODULE=/lib/modules/extra/muennet.ko
 MOD_ARGS="reader_protocol=0x7ade5c549b08e814 writer_protocol=0x7ade5c549b08e814"
-MOD_ARGS="$MOD_ARGS in=unikernel_out out=unikernel_in flags=eth_dev"
+MOD_ARGS="$MOD_ARGS in=$IN out=$OUT flags=eth_dev"
 
 mount -t debugfs none /sys/kernel/debug
 

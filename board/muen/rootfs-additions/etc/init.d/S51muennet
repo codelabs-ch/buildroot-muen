@@ -3,15 +3,54 @@
 MODULE=/lib/modules/extra/muennet.ko
 
 HOSTNAME=`hostname`
+CMDLINE=`cat /proc/cmdline`
+
+NAMES="net0"
+PROTOS="2"
+IN="testchannel_"
+OUT="testchannel_"
+FLAGS="net_hdr"
+EXTRA_IFACES=()
+
+process_unikernel_ifaces () {
+	# SHMSTREAM protocol used by MirageOS unikernels
+	PROT="0x7ade5c549b08e814"
+	for x in $CMDLINE
+	do
+		case "$x" in
+			unikernel_iface=*)
+				UNIKERNEL_IFACES="${x//unikernel_iface=}"
+				;;
+		esac
+	done
+
+	if [ ! -z "$UNIKERNEL_IFACES" ]
+	then
+		IFS=',' read -ra IFACE <<< "$UNIKERNEL_IFACES"
+		for i in "${IFACE[@]}";
+		do
+			EXTRA_IFACES+=("$i")
+			NAMES="$NAMES,$i"
+			IN="$IN,$i|out"
+			OUT="$OUT,$i|in"
+			FLAGS="$FLAGS,eth_dev"
+			PROTOS="$PROTOS,$PROT"
+		done
+	fi
+}
+
 
 case $HOSTNAME in
 	nic_linux)
-		in=4
-		out=3
+		IN="${IN}4"
+		OUT="${OUT}3"
+		IP=3
+		process_unikernel_ifaces
 		;;
 	storage_linux)
-		in=3
-		out=4
+		IN="${IN}3"
+		OUT="${OUT}4"
+		IP=4
 		;;
 	*)
 		# ignore unknown hosts
@@ -19,8 +58,8 @@ case $HOSTNAME in
 		;;
 esac
 
-MODULE_ARGS="name=net0 reader_protocol=2 writer_protocol=2"
-MODULE_ARGS="$MODULE_ARGS in=testchannel_$in out=testchannel_$out flags=net_hdr"
+MODULE_ARGS="name=$NAMES reader_protocol=$PROTOS writer_protocol=$PROTOS"
+MODULE_ARGS="$MODULE_ARGS in=$IN out=$OUT flags=$FLAGS"
 
 case "$1" in
   start)
@@ -28,8 +67,13 @@ case "$1" in
 	mount -t debugfs none /sys/kernel/debug \
 		&& insmod $MODULE $MODULE_ARGS \
 		&& ifconfig net0 up \
-		&& ifconfig net0 192.168.10.$out \
+		&& ifconfig net0 192.168.10.$IP \
 		&& ip route add 192.168.10.0/24 dev net0
+	for i in "${EXTRA_IFACES[@]}";
+	do
+		ip link set $i master br0
+		ip link set dev $i up
+	done
 	;;
   stop)
 	echo "Stopping Muen virtual networking..."

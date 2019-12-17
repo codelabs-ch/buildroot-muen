@@ -1,6 +1,5 @@
 config BR2_PACKAGE_MUENFS
 	bool "muenfs"
-	depends on BR2_PACKAGE_MUEN_LINUX_MODULES
 	help
 	  The muenfs Linux kernel module facilitates user-space access to Muen
 	  shared memory channels by exporting them in a virtual file system.

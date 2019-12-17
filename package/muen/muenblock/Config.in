@@ -1,6 +1,0 @@
-config BR2_PACKAGE_MUENBLOCK
-	bool "muenblock"
-	depends on BR2_PACKAGE_LMODS
-	help
-	  The muenblock Linux kernel module implements a block device driver which
-	  transports block I/O requests (bio) via Muen shared memory channels.

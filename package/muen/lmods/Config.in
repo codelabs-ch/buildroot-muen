@@ -1,5 +1,0 @@
-config BR2_PACKAGE_LMODS
-	bool "Muen Linux modules"
-	help
-	  Prepare the Muen-specific Linux kernel headers for external module
-	  builds.

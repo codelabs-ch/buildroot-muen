@@ -1,11 +1,9 @@
 #!/bin/sh
 
-MODULE=/lib/modules/extra/muenfs.ko
-
 case "$1" in
   start)
 	echo "Mounting Muen channel filesystem..."
-	insmod $MODULE && mount -t muenfs muenfs /muenfs
+	modprobe muenfs && mount -t muenfs muenfs /muenfs
 	;;
   stop)
 	echo "Unmounting Muen channel filesystem..."

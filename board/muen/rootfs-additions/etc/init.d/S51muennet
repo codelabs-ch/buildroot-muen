@@ -1,7 +1,5 @@
 #!/bin/sh
 
-MODULE=/lib/modules/extra/muennet.ko
-
 HOSTNAME=`hostname`
 CMDLINE=`cat /proc/cmdline`
 
@@ -65,7 +63,7 @@ case "$1" in
   start)
 	echo "Starting Muen virtual networking..."
 	mount -t debugfs none /sys/kernel/debug \
-		&& insmod $MODULE $MODULE_ARGS \
+		&& modprobe muennet $MODULE_ARGS \
 		&& ifconfig net0 up \
 		&& ifconfig net0 192.168.10.$IP \
 		&& ip route add 192.168.10.0/24 dev net0

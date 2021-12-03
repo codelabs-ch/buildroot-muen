@@ -2693,6 +2693,7 @@ source "package/muen/vttest/Config.in"
 source "package/muen/pingpong/Config.in"
 source "package/muen/sysbench/Config.in"
 source "package/muen/muenfs/Config.in"
+source "package/muen/muennet/Config.in"
 endmenu
 
 endmenu

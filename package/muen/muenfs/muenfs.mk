@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-MUENFS_VERSION     = d5a5889e3a98a3a3752c72883aa89ee70353225c
+MUENFS_VERSION     = f24a9deba6a76ab343f1bc3d88cb7ae272864a95
 MUENFS_SITE        = https://git.codelabs.ch/git/muen/linux/muenfs.git
 MUENFS_SITE_METHOD = git
 

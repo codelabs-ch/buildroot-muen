@@ -1,0 +1,69 @@
+#!/bin/sh
+#
+# Start the network....
+#
+
+# Debian ifupdown needs the /run/network lock directory
+mkdir -p /run/network
+
+init() {
+	# USB-network requires some time to settle
+	TRIES=10
+	IFACE=eth0
+
+	echo "Waiting $TRIES secs for $IFACE to appear ... "
+	for i in $(seq $TRIES); do
+		/sbin/ifconfig $IFACE >/dev/null 2>&1
+		status=$?
+		if [ $status -eq 0 ]; then break; fi
+		sleep 1
+	done
+
+	if [ $status -ne 0 ]; then
+		echo "ERROR: Interface $IFACE did not appear"
+		exit 1
+	fi
+
+	HOSTNAME=$(hostname)
+
+	case $HOSTNAME in
+		lnx1)
+			IPADDR=10.1.1.8
+			;;
+		lnx2)
+			IPADDR=10.1.1.9
+			;;
+		*)
+			echo "ERROR: Unknown hostname $HOSTNAME"
+			exit 1
+			;;
+	esac
+
+	sed -i "s/__ETH0_ADDRESS__/$IPADDR/" /etc/network/interfaces
+
+	echo "Setting address to $IPADDR"
+}
+
+case "$1" in
+  start)
+	init
+	printf "Starting network: "
+	/sbin/ifup -a
+	[ $? = 0 ] && echo "OK" || echo "FAIL"
+	;;
+  stop)
+	printf "Stopping network: "
+	/sbin/ifdown -a
+	[ $? = 0 ] && echo "OK" || echo "FAIL"
+	;;
+  restart|reload)
+	"$0" stop
+	"$0" start
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit $?
+

@@ -1,0 +1,14 @@
+#!/bin/sh
+
+get_hostname()
+{
+        echo "$1" | grep -oE 'hostname=[0-9a-z_]+' | cut -d= -f2
+}
+
+HOSTNAME=$(get_hostname "`cat /proc/cmdline`")
+if [ -z "$HOSTNAME" ]; then
+        exit 0
+fi
+
+hostname "$HOSTNAME"
+exit $?

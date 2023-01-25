@@ -1,0 +1,310 @@
+#!/bin/sh
+
+
+##########################################################################
+#                                                                        #
+#  Copyright (C) codelabs gmbh, Switzerland - all rights reserved        #
+#                <https://www.codelabs.ch/>, <contact@codelabs.ch>       #
+#                                                                        #
+#  This program is free software: you can redistribute it and/or modify  #
+#  it under the terms of the GNU General Public License as published by  #
+#  the Free Software Foundation, either version 3 of the License, or     #
+#  (at your option) any later version.                                   #
+#                                                                        #
+#  This program is distributed in the hope that it will be useful,       #
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of        #
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         #
+#  GNU General Public License for more details.                          #
+#                                                                        #
+#  You should have received a copy of the GNU General Public License     #
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>. #
+#                                                                        #
+#                                                                        #
+#    @contributors                                                       #
+#        2019, 2021  David Loosli <dave@codelabs.ch>                     #
+#                                                                        #
+#                                                                        #
+#    @description                                                        #
+#        subjectecho script to communicate with a native subject         #
+#        that returns a reversed echo of a given string                  #
+#    @project                                                            #
+#        MuenOnARM                                                       #
+#    @interface                                                          #
+#        Buildroot                                                       #
+#    @target                                                             #
+#        Xilinx UltraScale+ ZCU104 evaluation board                      #
+#    @reference                                                          #
+#        Linux Device Tree, Muen SK Channels and native driver with      #
+#        simple protocol                                                 #
+#                                                                        #
+##########################################################################
+
+
+##
+# @name  default configuration
+# @type  variable definitions
+#
+# @brief patch configurations for the different targets as
+#        arrays (i.e. [<id><type>]="<origfile> <destfile>")
+##
+
+EXPORT_FILE=/var/subjectecho/global.dat
+EXPORT_LOG=/var/subjectecho/global.log
+
+SE_INITIALIZED=False
+SE_READ_FLAG=0
+SE_WRITE_FLAG=0
+
+READ_CHANNEL=/dev/mrchan0
+WRITE_CHANNEL=/dev/mwchan0
+CHANNEL_SIZE=4096
+
+READ_TIMEOUT_LIMIT=10
+READ_TIMEOUT_COUNTER=0
+WRITE_TIMEOUT_LIMIT=5
+WRITE_TIMEOUT_COUNTER=0
+
+RESULT_MESSAGE=""
+
+##
+# @name  usage
+# @type  function
+#
+# @brief prints the usage information for this script
+##
+usage()
+{
+	echo "usage: subjectecho -h | --help  |"
+	echo "                   [-s <string> | --string <string>]"
+	echo ""
+	echo "  -h | --help     display usage info"
+	echo ""
+	echo "  -s | --string   the string the subject is going to reverse"
+	echo "                  on the specified read only channel (note:"
+	echo "                  ASCII support only)"
+	return 0
+}
+
+##
+# @name  print_log
+# @type  function
+#
+# @brief prints a log entry with a timestamp, a given title
+#        and a given message
+##
+print_log()
+{
+	echo "[$(date "+%H:%M:%S")] ${1} - ${2}" >> ${EXPORT_LOG} || return 1
+	return 0
+}
+
+##
+# @name  error_exit
+# @type  function
+#
+# @brief prints the passed error message and exits with the
+#        given error code
+##
+error_exit()
+{
+    print_log "SUBJECTECHO" "script error: ${1:-"Unknown Error"}"
+	exit ${2}
+}
+
+##
+# @name  ready_to_receive
+# @type  function
+#
+# @brief reads the header from the read channel and checks
+#        if the subject has sent a new message
+##
+ready_to_receive()
+{
+    if [ $READ_TIMEOUT_COUNTER -ge $READ_TIMEOUT_LIMIT ]; then
+        READ_TIMEOUT_COUNTER=0
+        error_exit "timeout at line 117" 1
+    fi
+
+    SE_READ_FLAG=$(sed -n 's/^SE_READ_FLAG=//p' $EXPORT_FILE)
+    SE_RF_CURRENT=$(dd bs=1 skip=0 count=1 if=${READ_CHANNEL} status=none | od -An -t d1 -N 1 | tr -d " ")
+
+    if [ "$SE_READ_FLAG" == "$SE_RF_CURRENT" ]; then
+        print_log "SUBJECTECHO" "no new message from subject received"
+        READ_TIMEOUT_COUNTER=$(($READ_TIMEOUT_COUNTER+1))
+        sleep 0.1
+        return 1
+    else
+        SE_READ_FLAG=${SE_RF_CURRENT}
+        sed -i "/^SE_READ_FLAG/s/=.*$/=${SE_READ_FLAG}/" $EXPORT_FILE
+        print_log "SUBJECTECHO" "new message from subject received"
+        return 0
+    fi
+}
+
+##
+# @name  read_message
+# @type  function
+#
+# @brief reads the message from the read channel
+##
+read_message()
+{
+    while ! ready_to_receive; do : ; done
+
+    MESSAGE_LENGTH=""
+
+    for Index in 4 5 6 7; do
+        TMP=$(dd bs=1 skip=${Index} count=5 if=${READ_CHANNEL} status=none | od -An -t x1 -N 1 | tr -d " ")
+        MESSAGE_LENGTH="${TMP}${MESSAGE_LENGTH}"
+    done
+
+    MESSAGE_LENGTH=$(echo ${MESSAGE_LENGTH} | sed -e 'y/abcdef/ABCDEF/')
+    MESSAGE_LENGTH=$(echo "ibase=16; ${MESSAGE_LENGTH}" | bc)
+    RESULT_MESSAGE=$(dd bs=1 skip=8 count=${MESSAGE_LENGTH} if=${READ_CHANNEL} status=none)
+
+    print_log "SUBJECTECHO" "Result Message: ${RESULT_MESSAGE}"
+    return 0
+}
+
+##
+# @name  ready_to_send
+# @type  function
+#
+# @brief reads the header from the read channel and checks
+#        if the subject is ready to receive a message
+##
+ready_to_send()
+{
+    if [ $WRITE_TIMEOUT_COUNTER -ge $WRITE_TIMEOUT_LIMIT ]; then
+        WRITE_TIMEOUT_COUNTER=0
+        error_exit "timeout at line 172" 1
+    fi
+
+    READY_CURRENT=$(dd bs=1 skip=1 count=1 if=${READ_CHANNEL} status=none | od -An -t d1 -N 1 | tr -d " ")
+
+    if [ "$READY_CURRENT" == "1" ]; then
+        print_log "SUBJECTECHO" "subject is ready to receive data"
+        return 0
+    else
+        print_log "SUBJECTECHO" "subject not ready to receive data"
+        WRITE_TIMEOUT_COUNTER=$(($WRITE_TIMEOUT_COUNTER+1))
+        sleep 0.1
+        return 1
+    fi
+}
+
+##
+# @name  write_message
+# @type  function
+#
+# @brief writes the message to the write channel
+##
+write_message()
+{
+    while ! ready_to_send; do : ; done
+
+    SE_WRITE_FLAG=$(sed -n 's/^SE_WRITE_FLAG=//p' $EXPORT_FILE)
+    SE_WRITE_FLAG=$((($SE_WRITE_FLAG+1)%2))
+    sed -i "/^SE_WRITE_FLAG/s/=.*$/=${SE_WRITE_FLAG}/" $EXPORT_FILE
+
+    if [ ${#1} -gt ${CHANNEL_SIZE} ]; then
+        error_exit "fragmentation not yet supported, message size over channel size at line 203" 2
+    fi
+
+    HEX_STRING=$(echo "obase=16; ${#1}" | bc)
+    OFFSET=${#HEX_STRING}
+    LENGTH_HEADER=""
+    OFFSET_HEADER=4
+
+    while [ $OFFSET_HEADER -gt 0 ]; do
+        OFFSET=$(($OFFSET-2))
+        case ${OFFSET} in
+			[0-9])
+				LENGTH_HEADER="${LENGTH_HEADER}\x${HEX_STRING:$OFFSET:2}"
+				;;
+            -1)
+				LENGTH_HEADER="${LENGTH_HEADER}\x0${HEX_STRING:0:1}"
+				;;
+            *)
+				LENGTH_HEADER="${LENGTH_HEADER}\x00"
+				;;
+        esac
+        OFFSET_HEADER=$(($OFFSET_HEADER-1))
+    done
+
+    echo -n -e "\x0${SE_WRITE_FLAG}\x01\x00\x00${LENGTH_HEADER}${1}" > ${WRITE_CHANNEL}
+
+    print_log "SUBJECTECHO" "writing ${1} with length ${#1}"
+    return 0
+}
+
+##
+# @name  initialize_communication
+# @type  function
+#
+# @brief prints the passed error message and exits with the
+#        given error code
+##
+initialize_communication()
+{
+    SE_INITIALIZED=$(sed -n 's/^SE_INITIALIZED=//p' $EXPORT_FILE)
+    SE_READ_FLAG=$(sed -n 's/^SE_READ_FLAG=//p' $EXPORT_FILE)
+    SE_WRITE_FLAG=$(sed -n 's/^SE_WRITE_FLAG=//p' $EXPORT_FILE)
+
+    if [ "$SE_INITIALIZED" != "True" ]; then
+        print_log "SUBJECTECHO" "initializing communication"
+
+        RESULT_MESSAGE=$(dd bs=1 skip=8 count=5 if=${READ_CHANNEL} status=none)
+
+        if [ "$RESULT_MESSAGE" == "Hello" ]; then
+            echo -n -e "\x00\x01\x00\x00\x05\x00\x00\x00Hello" > ${WRITE_CHANNEL}
+            sleep 0.1
+            echo -n -e "\x00\x01\x00\x00\x05\x00\x00\x00Hello" > ${WRITE_CHANNEL}
+            sed -i '/^SE_INITIALIZED/s/=.*$/=True/' $EXPORT_FILE
+            print_log "SUBJECTECHO" "communication initialized"
+        else
+            error_exit "unknown protocol at line 258" 1
+        fi
+    else
+        print_log "SUBJECTECHO" "communication already initialized"
+    fi
+}
+
+##
+# @name -
+# @type script main
+##
+if [ $# -gt 2 ]; then
+	print_log "SUBJECTECHO" "Illegal number of options. Please try again!"
+	usage
+	error_exit "at line ${1:-"272"}" 1
+fi
+
+if [ $# != 0 ]; then
+	while test $# -gt 0; do
+		case "$1" in
+
+			-h|--help)
+				usage
+				exit 0
+				;;
+				
+			-s|--string)
+                initialize_communication
+                write_message "${2}"
+                read_message
+                echo "Received Message: ${RESULT_MESSAGE}"
+                exit 0
+				;;
+
+			*)
+				print_log "SUBJECTECHO"  "Unknown option - please try again!"
+				usage
+				exit 1
+				;;
+
+		esac
+	done
+fi
+
+

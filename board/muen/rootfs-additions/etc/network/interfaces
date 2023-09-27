@@ -13,6 +13,7 @@ iface br0 inet static
 	gateway 192.168.254.1
 	netmask 255.255.255.0
 	pre-up brctl addbr br0
+	pre-up ip link set dev br0 address b2:b3:fd:09:c7:35
 	pre-up brctl addif br0 eth0
 	post-down brctl delif br0 eth0
 	post-down brctl delbr br0

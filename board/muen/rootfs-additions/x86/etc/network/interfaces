@@ -7,12 +7,9 @@ auto eth0
 iface eth0 inet manual
 
 auto br0
-iface br0 inet static
-	address 192.168.254.100
-	network 192.168.254.0
-	gateway 192.168.254.1
-	netmask 255.255.255.0
+iface br0 inet dhcp
 	pre-up brctl addbr br0
 	pre-up brctl addif br0 eth0
 	post-down brctl delif br0 eth0
 	post-down brctl delbr br0
+	post-up /usr/bin/log_ip.sh

@@ -39,13 +39,13 @@ process_unikernel_ifaces () {
 
 
 case $HOSTNAME in
-	nic_linux)
+	lnx1)
 		IN="${IN}4"
 		OUT="${OUT}3"
 		IP=3
 		process_unikernel_ifaces
 		;;
-	storage_linux)
+	lnx2)
 		IN="${IN}3"
 		OUT="${OUT}4"
 		IP=4

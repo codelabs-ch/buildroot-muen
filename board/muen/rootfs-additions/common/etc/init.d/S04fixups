@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# fix root ssh key permission
+chmod 600 /root/.ssh/id_rsa
+exit 0

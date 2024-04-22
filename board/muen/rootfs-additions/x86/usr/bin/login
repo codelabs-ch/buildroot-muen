@@ -3,8 +3,5 @@
 # set console loglevel
 echo 4 > /proc/sys/kernel/printk
 
-# fix root ssh key permission
-chmod 600 /root/.ssh/id_rsa
-
 # spawn normal login process
 /bin/login "$@"

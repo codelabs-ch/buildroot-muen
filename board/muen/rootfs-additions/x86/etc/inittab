@@ -25,6 +25,11 @@ null::sysinit:/bin/hostname -F /etc/hostname
 
 tty0::respawn:/sbin/mingetty --autologin root --loginprog /usr/bin/ttysnoops --noclear tty0
 
+# Do not set id as busybox will try to open the device even if no hvc is
+# connected. Let ttyrun handle that case in order to avoid noisy error
+# messages.
+::respawn:/sbin/ttyrun hvc1 /sbin/mingetty %t
+
 # Stuff to do for the 3-finger salute
 ::ctrlaltdel:/sbin/reboot
 

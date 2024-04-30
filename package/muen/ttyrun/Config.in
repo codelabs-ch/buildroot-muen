@@ -1,0 +1,5 @@
+config BR2_PACKAGE_TTYRUN
+	bool "ttyrun"
+	help
+	  Start a program if a specified terminal device is available.
+	  Standalone utility extracted from s390-tools.

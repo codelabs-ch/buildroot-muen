@@ -28,10 +28,10 @@ init() {
 
 	case $HOSTNAME in
 		lnx1)
-			IPADDR=10.1.1.8
+			CONFIG="post-up \/usr\/bin\/log_ip.sh NCI-DHCP_IP"
 			;;
 		lnx2)
-			IPADDR=10.1.1.9
+			CONFIG="post-up \/usr\/bin\/log_ip.sh LNX2-DHCP_IP"
 			;;
 		*)
 			echo "ERROR: Unknown hostname $HOSTNAME"
@@ -39,9 +39,7 @@ init() {
 			;;
 	esac
 
-	sed -i "s/__ETH0_ADDRESS__/$IPADDR/" /etc/network/interfaces
-
-	echo "Setting address to $IPADDR"
+	sed -i "s/__ETH0_CONFIG__/$CONFIG/" /etc/network/interfaces
 }
 
 case "$1" in
